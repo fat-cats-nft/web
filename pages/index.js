@@ -1,33 +1,35 @@
-import mintExampleAbi from "../mintExampleAbi.json";
-import { ethers } from "ethers";
 import { useEffect, useState } from "react";
+import { ethers, providers } from "ethers";
+import mintExampleAbi from "../mintExampleAbi.json";
+import Web3Modal from "web3modal";
+import { providerOptions } from "../helpers/providerOptions";
 
 const contractAddress = "0xc09baFA1d082a98f8C9B0abB499CbA7aF672f44b";
 
 export default function App() {
   // Connecting
-  const [accounts, setAccounts] = useState([]);
+  const [provider, setProvider] = useState();
 
   async function connectAccounts() {
-    if (window.ethereum) {
-      const accounts = await window.ethereum.request({
-        method: "eth_requestAccounts"
+    if (!provider) {
+      const web3Modal = new Web3Modal({
+        providerOptions // required
       });
-      setAccounts(accounts);
-      console.log(accounts);
+      await web3Modal.clearCachedProvider();
+      setProvider(await connect(web3Modal));
     }
   }
 
-  useEffect(() => {
-    connectAccounts();
-  }, [])
+  async function connect(web3Modal) {
+    const provider = await web3Modal.connect();
+    return new providers.Web3Provider(provider);
+  }
 
   // Minting
   const [mintQuantity, setMintQuantity] = useState(1);
 
   async function handleMint() {
-    if (window.ethereum) {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
+    if (provider) {
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
         contractAddress,
@@ -47,14 +49,21 @@ export default function App() {
   return (
     <div className="App">
       This is how create a mint button
-      {accounts.length && (
-        <div>
-          <button onClick={() => setMintQuantity(mintQuantity - 1)}>-</button>
-          {mintQuantity}
-          <button onClick={() => setMintQuantity(mintQuantity + 1)}>+</button>
-          <button onClick={handleMint}>Mint</button>
-        </div>
-      )}
+      <div>
+        {!provider && (
+          <button onClick={() => connectAccounts()}>Connect Wallet</button>
+        )}
+      </div>
+      <div>
+        {provider && (
+          <div>
+            <button onClick={() => setMintQuantity(mintQuantity - 1)}>-</button>
+            {mintQuantity}
+            <button onClick={() => setMintQuantity(mintQuantity + 1)}>+</button>
+            <button onClick={handleMint}>Mint</button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
