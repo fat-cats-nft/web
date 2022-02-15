@@ -9,6 +9,7 @@ export default function Header() {
             <div className={styles.halfContainer}>
                 <div className={styles.alignLeft}>
                     <button className={styles.textButton} onClick={() => router.push('/')}>Home</button>
+                    <button className={styles.textButton} onClick={() => router.push('/mint')}>Mint</button>
                 </div>
             </div>
             <div className={styles.halfContainer}>

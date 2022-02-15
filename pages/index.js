@@ -8,7 +8,6 @@ export default function App() {
     < div>
       <Header />
       Fat Cats
-      < button type="button" onClick={() => router.push('/mint')}> Mint</button >
     </div >
   );
 }
