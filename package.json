@@ -16,6 +16,7 @@
     "web3modal": "^1.9.5"
   },
   "devDependencies": {
+    "dotenv-webpack": "^7.1.0",
     "eslint": "8.9.0",
     "eslint-config-next": "12.0.10"
   }

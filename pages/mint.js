@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
 import { ethers, providers } from "ethers";
+import { providerOptions } from "../helpers/providerOptions";
 import mintExampleAbi from "../mintExampleAbi.json";
 import Web3Modal from "web3modal";
-import { providerOptions } from "../helpers/providerOptions";
 import Header from "../components/header";
 
-const contractAddress = "0xc09baFA1d082a98f8C9B0abB499CbA7aF672f44b";
+const NFT_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS;
 
 export default function Mint() {
-  // Connecting
+  const [minted, setMinted] = useState(0);
+  const [available, setAvailable] = useState(0);
+
+  // Connecting wallet provider
   const [provider, setProvider] = useState();
 
   async function connectAccounts() {
@@ -45,14 +48,14 @@ export default function Mint() {
     return new providers.Web3Provider(provider, "any");
   }
 
-  // Minting
+  // Minting NFTs
   const [mintQuantity, setMintQuantity] = useState(1);
 
   async function handleMint() {
     if (provider) {
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
-        contractAddress,
+        NFT_CONTRACT_ADDRESS,
         mintExampleAbi.abi,
         signer
       );
