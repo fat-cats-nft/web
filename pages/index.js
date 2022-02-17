@@ -1,26 +1,20 @@
-import { useRouter } from "next/router";
-import Header from "../components/header";
-import styles from '../styles/index.module.css';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Header from "../components/header/header";
+import Landing from "../components/landing/landing";
+import Mint from "../components/mint/mint";
 
 export default function App() {
-  const router = useRouter();
 
   return (
     < div>
-      <Header />
-      <div className={styles.body}>
-        <div className={styles.container}>
-          <div className={styles.title}>Fat Cats</div>
-        </div>
-        <div className={styles.container}>
-          <div className={styles.buttonContainer}>
-            <button className={styles.button} onClick={() => router.push('/mint')}>Mint</button>
-          </div>
-        </div>
-        <div className={styles.container}>
-          <img className={styles.img} src="https://storage.googleapis.com/fat-cats-nft-test-images/fat%20cat.jpeg" alt="Fat Cat"></img>
-        </div>
-      </div>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Landing />}></Route>
+          <Route path="/mint" element={<Mint />}></Route>
+        </Routes>
+      </Router>
     </div >
   );
 }

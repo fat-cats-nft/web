@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ethers, providers } from "ethers";
-import { providerOptions } from "../helpers/providerOptions";
-import mintExampleAbi from "../mintExampleAbi.json";
+import { providerOptions } from "./providerOptions";
+import mintExampleAbi from "./mintExampleAbi.json";
 import Web3Modal from "web3modal";
-import Header from "../components/header";
 
 const NFT_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS;
 
@@ -71,7 +70,6 @@ export default function Mint() {
 
   return (
     <div>
-      <Header />
       This is how create a mint button
       <div>
         {!provider && (
