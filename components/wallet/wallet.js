@@ -1,29 +1,28 @@
 import { useContext } from "react";
 import { WalletContext } from "../contexts";
-import formatAddress from "../../helpers";
-import styles from './wallet.module.css';
+import commonStyles from '../common.module.css';
+import walletStyles from './wallet.module.css';
 
 export default function DisconnectWallet({ showDisconnectWallet, setDisconnectWallet }) {
     const { setShowDisconnectWallet, address } = useContext(WalletContext);
     const showHideClassName = showDisconnectWallet ? { display: "block" } : { display: "none" };
-    console.log(showHideClassName);
 
     return (
-        <div className={styles.modal} style={showHideClassName}>
-            <div className={styles.main}>
-                <div className={styles.container}>
+        <div className={walletStyles.modal} style={showHideClassName}>
+            <div className={walletStyles.main}>
+                <div className={walletStyles.container}>
                     Address:
                 </div>
-                <div className={styles.container}>
+                <div className={walletStyles.container}>
                     {address}
                 </div>
-                <div className={styles.container}>
-                    <button className={styles.button2} onClick={() => setShowDisconnectWallet(false)}>
+                <div className={walletStyles.container}>
+                    <button className={commonStyles.button2} onClick={() => setShowDisconnectWallet(false)}>
                         Close
                     </button>
                 </div>
-                <div className={styles.container}>
-                    <button className={styles.button1} onClick={() => setDisconnectWallet(true)}>
+                <div className={walletStyles.container}>
+                    <button className={commonStyles.button1} onClick={() => setDisconnectWallet(true)}>
                         Disconnect
                     </button>
                 </div>

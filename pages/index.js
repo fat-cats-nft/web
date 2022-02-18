@@ -9,6 +9,7 @@ import Web3Modal from "web3modal";
 import { defaultProvider, providerOptions } from "../providers";
 import { WalletContext } from "../components/contexts";
 
+const defaultNetwork = 4;
 
 export default function App() {
   // Connecting wallet provider
@@ -18,23 +19,38 @@ export default function App() {
   const [provider, setProvider] = useState();
   const [address, setAddress] = useState();
 
-  useEffect(() => {
-    const web3Modal = new Web3Modal({
-      providerOptions, // required
-      cacheProvider: true,
-    });
-    if (web3Modal.cachedProvider) {
-
-      const provisionProvider = async () => {
-        const _connection = await web3Modal.connectTo(web3Modal.cachedProvider);
-        const _provider = new ethers.providers.Web3Provider(_connection, "any");
+  function loadProvider(providerInput) {
+    const _provider = new ethers.providers.Web3Provider(providerInput);
+    if (_provider) {
+      setProvider(_provider);
+      const walletConnect = async () => {
         const _signer = _provider.getSigner();
         const _address = await _signer.getAddress();
-        setProvider(_provider);
-        setAddress(_address);
+        return _address
       }
-      provisionProvider()
-        .catch(console.error)
+      walletConnect()
+        .then(result => {
+          setAddress(result);
+        })
+        .catch(console.error);
+    } else {
+      setProvider(defaultProvider);
+    }
+    return
+  }
+
+  useEffect(() => {
+    if (window.ethereum) {
+      if (window.ethereum.networkVersion != defaultNetwork) {
+        const switchNetwork = async () => {
+          await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x4' }] });
+          loadProvider(window.ethereum);
+        }
+        switchNetwork()
+          .catch(console.error);
+      } else {
+        loadProvider(window.ethereum);
+      }
     } else {
       setProvider(defaultProvider);
     }
@@ -48,7 +64,7 @@ export default function App() {
           cachedProvider: true,
         });
         const _connection = await web3Modal.connect();
-        const _provider = new ethers.providers.Web3Provider(_connection, "any");
+        const _provider = new ethers.providers.Web3Provider(_connection);
         const _signer = _provider.getSigner();
         const _address = await _signer.getAddress();
         setProvider(_provider);
