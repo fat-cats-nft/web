@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
-import { useRouter } from "next/router";
 import styles from './header.module.css';
+import { useEffect, useContext } from "react";
+import { WalletContext } from "../../components/contexts/wallet";
 
 export default function Header() {
-    const router = useRouter();
+    const { setConnectWallet, setDisconnectWallet, address } = useContext(WalletContext);
 
     return (
         <div className={styles.header}>
@@ -18,9 +19,14 @@ export default function Header() {
                 </div>
             </div>
             <div className={styles.halfContainer}>
-                <div className={styles.alignRight}>
-                    <button className={styles.button}>Connect Wallet</button>
-                </div>
+                {!address &&
+                    <div className={styles.alignRight}>
+                        <button className={styles.button} onClick={() => setConnectWallet(true)}>Connect Wallet</button>
+                    </div>}
+                {address &&
+                    <div className={styles.alignRight}>
+                        <button className={styles.button} onClick={() => setDisconnectWallet(true)}>{address.substr(0, 3) + "..." + address.substr(address.length - 3, address.length)}</button>
+                    </div>}
             </div>
         </div>
     )

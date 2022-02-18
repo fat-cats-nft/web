@@ -1,4 +1,7 @@
+import { ethers } from "ethers";
 import WalletConnectProvider from "@walletconnect/web3-provider";
+
+const defaultProvider = new ethers.providers.AlchemyProvider(process.env.NEXT_PUBLIC_ETHEREUM_NETWORK, process.env.NEXT_PUBLIC_ALCHEMY_API_KEY);
 
 const providerOptions = {
     walletconnect: {
@@ -11,4 +14,5 @@ const providerOptions = {
 
 module.exports = {
     providerOptions,
+    defaultProvider,
 }

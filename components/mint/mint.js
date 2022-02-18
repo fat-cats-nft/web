@@ -1,51 +1,12 @@
-import { useState } from "react";
-import { ethers, providers } from "ethers";
-import { providerOptions } from "./providerOptions";
-import mintExampleAbi from "./mintExampleAbi.json";
-import Web3Modal from "web3modal";
+import { useState, useContext } from "react";
+import { ethers } from "ethers";
+import mintExampleAbi from "../../abis/mintExampleAbi.json";
+import { WalletContext } from "../../components/contexts/wallet";
 
 const NFT_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS;
 
 export default function Mint() {
-  const [minted, setMinted] = useState(0);
-  const [available, setAvailable] = useState(0);
-
-  // Connecting wallet provider
-  const [provider, setProvider] = useState();
-
-  async function connectAccounts() {
-    if (!provider) {
-      const web3Modal = new Web3Modal({
-        providerOptions // required
-      });
-      await web3Modal.clearCachedProvider();
-      setProvider(await connect(web3Modal));
-    }
-  }
-
-  async function connect(web3Modal) {
-    const provider = await web3Modal.connect();
-    // Subscribe to accounts change
-    provider.on("accountsChanged", (accounts) => {
-      console.log(accounts);
-    });
-
-    // Subscribe to chainId change
-    provider.on("chainChanged", (chainId) => {
-      console.log(chainId);
-    });
-
-    // Subscribe to provider connection
-    provider.on("connect", (info) => {
-      console.log(info);
-    });
-
-    // Subscribe to provider disconnection
-    provider.on("disconnect", (error) => {
-      console.log(error);
-    });
-    return new providers.Web3Provider(provider, "any");
-  }
+  const { setConnectWallet, provider, address } = useContext(WalletContext);
 
   // Minting NFTs
   const [mintQuantity, setMintQuantity] = useState(1);
@@ -72,12 +33,12 @@ export default function Mint() {
     <div>
       This is how create a mint button
       <div>
-        {!provider && (
-          <button onClick={() => connectAccounts()}>Connect Wallet</button>
+        {!address && (
+          <button onClick={() => setConnectWallet(true)}>Connect Wallet</button>
         )}
       </div>
       <div>
-        {provider && (
+        {address && (
           <div>
             <button onClick={() => setMintQuantity(mintQuantity - 1)}>-</button>
             {mintQuantity}

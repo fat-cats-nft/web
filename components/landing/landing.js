@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
-import { useRouter } from "next/router";
 import styles from './landing.module.css';
+import { useContext } from "react";
+import { WalletContext } from "../../components/contexts/wallet";
 
 export default function Landing() {
+  const { setConnectWallet, address } = useContext(WalletContext);
 
   return (
     <div>
@@ -12,9 +14,14 @@ export default function Landing() {
         </div>
         <div className={styles.container}>
           <div className={styles.buttonContainer}>
-            <button className={styles.button}>
-              <Link to="/mint">Mint</Link>
-            </button>
+            {!address &&
+              <button className={styles.button} onClick={() => setConnectWallet(true)}>Connect Wallet</button>
+            }
+            {address &&
+              <button className={styles.button}>
+                <Link to="/mint">Mint</Link>
+              </button>
+            }
           </div>
         </div>
         <div className={styles.container}>
