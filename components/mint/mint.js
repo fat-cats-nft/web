@@ -1,12 +1,12 @@
 import { useState, useContext } from "react";
 import { ethers } from "ethers";
 import mintExampleAbi from "../../abis/mintExampleAbi.json";
-import { WalletContext } from "../../components/contexts/wallet";
+import { WalletContext } from "../contexts";
 
 const NFT_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS;
 
 export default function Mint() {
-  const { setConnectWallet, provider, address } = useContext(WalletContext);
+  const { setShowConnectWallet, provider, address } = useContext(WalletContext);
 
   // Minting NFTs
   const [mintQuantity, setMintQuantity] = useState(1);
@@ -34,7 +34,7 @@ export default function Mint() {
       This is how create a mint button
       <div>
         {!address && (
-          <button onClick={() => setConnectWallet(true)}>Connect Wallet</button>
+          <button onClick={() => setShowConnectWallet(true)}>Connect Wallet</button>
         )}
       </div>
       <div>

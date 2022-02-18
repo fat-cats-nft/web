@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 import styles from './header.module.css';
-import { useEffect, useContext } from "react";
-import { WalletContext } from "../../components/contexts/wallet";
+import { useContext } from "react";
+import { WalletContext } from "../contexts";
+import formatAddress from "../../helpers";
 
 export default function Header() {
-    const { setConnectWallet, setDisconnectWallet, address } = useContext(WalletContext);
+    const { setShowConnectWallet, setShowDisconnectWallet, address } = useContext(WalletContext);
 
     return (
         <div className={styles.header}>
@@ -21,11 +22,11 @@ export default function Header() {
             <div className={styles.halfContainer}>
                 {!address &&
                     <div className={styles.alignRight}>
-                        <button className={styles.button} onClick={() => setConnectWallet(true)}>Connect Wallet</button>
+                        <button className={styles.button} onClick={() => setShowConnectWallet(true)}>Connect Wallet</button>
                     </div>}
                 {address &&
                     <div className={styles.alignRight}>
-                        <button className={styles.button} onClick={() => setDisconnectWallet(true)}>{address.substr(0, 3) + "..." + address.substr(address.length - 3, address.length)}</button>
+                        <button className={styles.button} onClick={() => setShowDisconnectWallet(true)}>{formatAddress(address)}</button>
                     </div>}
             </div>
         </div>
