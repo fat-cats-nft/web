@@ -37,7 +37,7 @@ export default function Mint() {
   // Minting NFTs
   const [mintQuantity, setMintQuantity] = useState(1);
 
-  async function handleMint() {
+  async function mint() {
     if (address) {
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
@@ -79,7 +79,7 @@ export default function Mint() {
                 <button className={commonStyles.button} onClick={() => setMintQuantity(mintQuantity - 1)}>-</button>
                 {mintQuantity}
                 <button className={commonStyles.button} onClick={() => setMintQuantity(mintQuantity + 1)}>+</button>
-                <button className={commonStyles.button2} onClick={handleMint}>Mint</button>
+                <button className={commonStyles.button2} onClick={mint}>Mint</button>
               </div>
             )}
           </div>
