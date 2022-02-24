@@ -19,8 +19,7 @@ export default function App() {
   const [provider, setProvider] = useState();
   const [address, setAddress] = useState();
 
-  function loadProvider(providerInput) {
-    const _provider = new ethers.providers.Web3Provider(providerInput);
+  function loadProvider(_provider) {
     if (_provider) {
       setProvider(_provider);
       const walletConnect = async () => {
@@ -44,12 +43,14 @@ export default function App() {
       if (window.ethereum.networkVersion != defaultNetwork) {
         const switchNetwork = async () => {
           await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x4' }] });
-          loadProvider(window.ethereum);
+          const _provider = new ethers.providers.Web3Provider(window.ethereum);
+          loadProvider(_provider);
         }
         switchNetwork()
           .catch(console.error);
       } else {
-        loadProvider(window.ethereum);
+        const _provider = new ethers.providers.Web3Provider(window.ethereum);
+        loadProvider(_provider);
       }
     } else {
       setProvider(defaultProvider);
@@ -65,10 +66,7 @@ export default function App() {
         });
         const _connection = await web3Modal.connect();
         const _provider = new ethers.providers.Web3Provider(_connection);
-        const _signer = _provider.getSigner();
-        const _address = await _signer.getAddress();
-        setProvider(_provider);
-        setAddress(_address);
+        loadProvider(_provider);
       }
       walletConnect()
         .catch(console.error)

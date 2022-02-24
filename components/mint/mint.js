@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import mintExampleAbi from "../../abis/mintExampleAbi.json";
 import { WalletContext } from "../contexts";
 import commonStyles from "../common.module.css";
+import mintStyles from "./mint.module.css";
 
 const contractAddress = "0xc09baFA1d082a98f8C9B0abB499CbA7aF672f44b";
 const abi = mintExampleAbi.abi;
@@ -61,7 +62,9 @@ export default function Mint() {
         <div className={commonStyles.subtitle}>Mint Info</div>
       </div>
       <div className={commonStyles.container}>
-        {minted} of {available} minted
+        <div className={mintStyles.bodyContainer}>
+          {minted} of {available} minted
+        </div>
       </div>
       <div className={commonStyles.container}>
         <div className={commonStyles.buttonContainer}>
