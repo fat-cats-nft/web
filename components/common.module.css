@@ -26,9 +26,18 @@
     margin-top: 20px;
 }
 
+.body {
+  font: 100;
+  font-size: 18px;
+  font-family: American Typewriter, serif;
+  text-align: center;
+  margin: 2%;
+}
+
 .buttonContainer {
     display: flex;
     justify-content: center;
+    text-align: center;
     align-items: center;
     margin-bottom: 25px;
 }
