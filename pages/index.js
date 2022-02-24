@@ -15,19 +15,17 @@ export default function App() {
   const [showDisconnectWallet, setShowDisconnectWallet] = useState(false);
   const [disconnectWallet, setDisconnectWallet] = useState(false);
   const [provider, setProvider] = useState();
+  const [chainId, setChainId] = useState();
+  const [signer, setSigner] = useState();
   const [address, setAddress] = useState();
+  const [balance, setBalance] = useState();
 
   // Load provider on page load
   useEffect(() => {
     if (window.ethereum) {
-      const _provider = new ethers.providers.Web3Provider(window.ethereum, "any");
       setEventListeners();
-      setProvider(_provider);
-      const walletConnect = async () => {
-        await connectWallet(_provider);
-      }
-      walletConnect()
-        .catch(console.error);
+      const _provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+      setContext(_provider);
     } else {
       setProvider(defaultProvider);
     }
@@ -38,31 +36,49 @@ export default function App() {
     if (window.ethereum) {
       // Subscribe to accounts change
       window.ethereum.on("accountsChanged", (accounts) => {
-        console.log(accounts);
+        console.log("Accounts Changed: ", accounts);
+        const _provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+        setContext(_provider);
       });
 
       // Subscribe to chainId change
-      window.ethereum.on("chainChanged", (chainId) => {
-        console.log(chainId);
+      window.ethereum.on("chainChanged", (_chainId) => {
+        console.log("Chain changed: ", _chainId);
       });
 
       // Subscribe to provider connection
       window.ethereum.on("connect", (info) => {
-        console.log(info);
+        console.log("Connect: ", info);
       });
 
       // Subscribe to provider disconnection
-      window.ethereum.on("disconnect", (error) => {
-        console.log(error);
+      window.ethereum.on("disconnect", (info) => {
+        console.log("Disconnect: ", info);
       });
     }
   }
 
-  // Connect wallet
-  async function connectWallet(_provider) {
-    const _signer = _provider.getSigner();
-    const _address = await _signer.getAddress();
-    setAddress(_address);
+  // Set context values
+  async function setContext(_provider) {
+    setProvider(_provider);
+    if (window.ethereum) {
+      const _chainId = await ethereum.request({ method: 'eth_chainId' });
+      setChainId(_chainId);
+      const _accounts = await ethereum.request({ method: 'eth_accounts' })
+      console.log("Accounts: ", _accounts);
+      if (_accounts.length > 0) {
+        const _signer = _provider.getSigner();
+        setSigner(_signer);
+        const _address = await _signer.getAddress();
+        setAddress(_address);
+        const _balance = await _signer.getBalance();
+        setBalance(_balance);
+      } else {
+        setSigner(null);
+        setAddress(null);
+        setBalance(null);
+      }
+    }
   }
 
 
@@ -76,8 +92,6 @@ export default function App() {
         const _connection = await web3Modal.connect();
         const _provider = new ethers.providers.Web3Provider(_connection, "any");
         setProvider(_provider);
-        setEventListeners();
-        await connectWallet(_provider);
       }
       walletConnect()
         .catch(console.error)
@@ -94,7 +108,6 @@ export default function App() {
         });
         await web3Modal.clearCachedProvider();
         setProvider(defaultProvider);
-        setAddress(null);
         setShowDisconnectWallet(false);
         setDisconnectWallet(false);
       }
@@ -104,7 +117,7 @@ export default function App() {
   }, [disconnectWallet])
 
   return (
-    <WalletContext.Provider value={{ setShowConnectWallet, setShowDisconnectWallet, provider, address }}>
+    <WalletContext.Provider value={{ setShowConnectWallet, setShowDisconnectWallet, provider, chainId, signer, address, balance }}>
 
       <Router>
         <Header />

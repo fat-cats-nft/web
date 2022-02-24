@@ -9,7 +9,7 @@ const contractAddress = "0xc09baFA1d082a98f8C9B0abB499CbA7aF672f44b";
 const abi = mintExampleAbi.abi;
 
 export default function Mint() {
-  const { setShowConnectWallet, provider, address } = useContext(WalletContext);
+  const { setShowConnectWallet, provider, chainId, signer, address, balance } = useContext(WalletContext);
   const [minted, setMinted] = useState(0);
   const [available, setAvailable] = useState(0);
 
@@ -39,7 +39,6 @@ export default function Mint() {
 
   async function mint() {
     if (address) {
-      const signer = provider.getSigner();
       const contract = new ethers.Contract(
         contractAddress,
         abi,
