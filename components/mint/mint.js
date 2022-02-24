@@ -15,7 +15,7 @@ export default function Mint() {
 
   // Get Mint status on page load
   useEffect(() => {
-    if (provider && abi && contractAddress && !minted) {
+    if (provider && abi && !minted) {
       const contract = new ethers.Contract(contractAddress, abi, provider);
       const getMintStatus = async () => {
         const _minted = await contract.totalSupply();
@@ -32,7 +32,7 @@ export default function Mint() {
         })
         .catch(console.error);
     }
-  }, [provider, abi, contractAddress, minted])
+  }, [provider, abi, minted])
 
   // Minting NFTs
   const [mintQuantity, setMintQuantity] = useState(1);

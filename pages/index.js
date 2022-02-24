@@ -16,12 +16,11 @@ export default function App() {
   const [disconnectWallet, setDisconnectWallet] = useState(false);
   const [provider, setProvider] = useState();
   const [address, setAddress] = useState();
-  const defaultNetwork = 4;
 
   // Load provider on page load
   useEffect(() => {
     if (window.ethereum) {
-      const _provider = new ethers.providers.Web3Provider(window.ethereum);
+      const _provider = new ethers.providers.Web3Provider(window.ethereum, "any");
       setEventListeners();
       setProvider(_provider);
       const walletConnect = async () => {
@@ -37,24 +36,23 @@ export default function App() {
   // Set event listeners for provider
   function setEventListeners() {
     if (window.ethereum) {
-      const ethereum = window.ethereum;
       // Subscribe to accounts change
-      ethereum.on("accountsChanged", (accounts) => {
+      window.ethereum.on("accountsChanged", (accounts) => {
         console.log(accounts);
       });
 
       // Subscribe to chainId change
-      ethereum.on("chainChanged", (chainId) => {
+      window.ethereum.on("chainChanged", (chainId) => {
         console.log(chainId);
       });
 
       // Subscribe to provider connection
-      ethereum.on("connect", (info) => {
+      window.ethereum.on("connect", (info) => {
         console.log(info);
       });
 
       // Subscribe to provider disconnection
-      ethereum.on("disconnect", (error) => {
+      window.ethereum.on("disconnect", (error) => {
         console.log(error);
       });
     }
@@ -76,7 +74,7 @@ export default function App() {
           cachedProvider: true,
         });
         const _connection = await web3Modal.connect();
-        const _provider = new ethers.providers.Web3Provider(_connection);
+        const _provider = new ethers.providers.Web3Provider(_connection, "any");
         setProvider(_provider);
         setEventListeners();
         await connectWallet(_provider);
@@ -106,7 +104,7 @@ export default function App() {
   }, [disconnectWallet])
 
   return (
-    <WalletContext.Provider value={{ setShowConnectWallet, setShowDisconnectWallet, provider, address, defaultNetwork }}>
+    <WalletContext.Provider value={{ setShowConnectWallet, setShowDisconnectWallet, provider, address }}>
 
       <Router>
         <Header />
