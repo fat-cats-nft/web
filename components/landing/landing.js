@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import commonStyles from '../common.module.css';
 import landingStyles from './landing.module.css';
-import { useContext } from "react";
-import { WalletContext } from "../contexts";
+import { useContext } from 'react';
+import { WalletContext } from '../contexts';
 
 export default function Landing() {
   const { setShowConnectWallet, address } = useContext(WalletContext);
@@ -14,18 +14,27 @@ export default function Landing() {
       </div>
       <div className={commonStyles.container}>
         <div className={commonStyles.buttonContainer}>
-          {!address &&
-            <button className={commonStyles.button1} onClick={() => setShowConnectWallet(true)}>Connect Wallet</button>
-          }
-          {address &&
+          {!address && (
+            <button
+              className={commonStyles.button1}
+              onClick={() => setShowConnectWallet(true)}
+            >
+              Connect Wallet
+            </button>
+          )}
+          {address && (
             <button className={commonStyles.button1}>
               <Link to="/mint">Mint</Link>
             </button>
-          }
+          )}
         </div>
       </div>
       <div className={commonStyles.container}>
-        <img className={landingStyles.img} src="https://storage.googleapis.com/fat-cats-nft-test-images/fat%20cat.jpeg" alt="Fat Cat"></img>
+        <img
+          className={landingStyles.img}
+          src="https://storage.googleapis.com/fat-cats-nft-test-images/fat%20cat.jpeg"
+          alt="Fat Cat"
+        ></img>
       </div>
     </div>
   );
