@@ -94,6 +94,8 @@ export default function Mint() {
         console.log("response: ", response);
       } catch (err) {
         console.log("error: ", err);
+        setErrorMessage(err.error.message);
+        setDisableMint(true);
       }
     }
   }
