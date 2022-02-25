@@ -69,3 +69,8 @@
   .button2:hover {
     cursor: pointer;
   }
+
+  .button2:disabled {
+    cursor: auto;
+    opacity: 0.5;
+  }

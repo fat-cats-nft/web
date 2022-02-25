@@ -5,17 +5,26 @@ import { WalletContext } from "../contexts";
 import commonStyles from "../common.module.css";
 import mintStyles from "./mint.module.css";
 
-const contractAddress = "0xc09baFA1d082a98f8C9B0abB499CbA7aF672f44b";
-const abi = mintExampleAbi.abi;
+const contracts = {
+  "abi": mintExampleAbi.abi,
+  "chains": {
+    "0x4": "0xc09baFA1d082a98f8C9B0abB499CbA7aF672f44b",
+  }
+}
 
 export default function Mint() {
   const { setShowConnectWallet, provider, chainId, signer, address, balance } = useContext(WalletContext);
+  const [abi, setAbi] = useState(contracts.abi);
+  const [contractAddress, setContractAddress] = useState(contracts.chains[chainId]);
   const [minted, setMinted] = useState(0);
   const [available, setAvailable] = useState(0);
+  const [disableMint, setDisableMint] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [mintQuantity, setMintQuantity] = useState(1);
 
   // Get Mint status on page load
   useEffect(() => {
-    if (provider && abi && !minted) {
+    if (provider && abi && contractAddress && !minted) {
       const contract = new ethers.Contract(contractAddress, abi, provider);
       const getMintStatus = async () => {
         const _minted = await contract.totalSupply();
@@ -32,11 +41,46 @@ export default function Mint() {
         })
         .catch(console.error);
     }
-  }, [provider, abi, minted])
+  }, [provider, abi, contractAddress, minted])
+
+  // Error handling
+  function handleErrors() {
+    if (chainId) {
+      // Adjust mint ability
+      if (!contracts.chains[chainId]) {
+        setDisableMint(true);
+        setErrorMessage("Incompatible chain. Switch to Rinkeby.");
+      } else {
+        if (balance && mintQuantity) {
+          const bigNumberAmountETH = ethers.utils.parseEther((mintQuantity * 0.1).toString());
+          if (balance.gte(bigNumberAmountETH)) {
+            setDisableMint(false);
+            setErrorMessage("");
+          } else {
+            setDisableMint(true);
+            setErrorMessage("Insufficient ETH in wallet.");
+          }
+        }
+      }
+    }
+  }
+
+  // Adjust state based on chainId
+  useEffect(() => {
+    // Adjust contract address
+    if (chainId) {
+      setContractAddress(contracts.chains[chainId]);
+    }
+  }, [chainId])
+
+  // Handle mint errors
+  useEffect(() => {
+    if (chainId && mintQuantity && balance) {
+      handleErrors();
+    }
+  }, [chainId, mintQuantity, balance])
 
   // Minting NFTs
-  const [mintQuantity, setMintQuantity] = useState(1);
-
   async function mint() {
     if (address) {
       const contract = new ethers.Contract(
@@ -78,7 +122,8 @@ export default function Mint() {
                 <button className={commonStyles.button} onClick={() => setMintQuantity(mintQuantity - 1)}>-</button>
                 {mintQuantity}
                 <button className={commonStyles.button} onClick={() => setMintQuantity(mintQuantity + 1)}>+</button>
-                <button className={commonStyles.button2} onClick={mint}>Mint</button>
+                <button className={commonStyles.button2} onClick={mint} disabled={disableMint}>Mint</button>
+                <div>{errorMessage}</div>
               </div>
             )}
           </div>

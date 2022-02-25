@@ -44,6 +44,8 @@ export default function App() {
       // Subscribe to chainId change
       window.ethereum.on("chainChanged", (_chainId) => {
         console.log("Chain changed: ", _chainId);
+        const _provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+        setContext(_provider);
       });
 
       // Subscribe to provider connection
