@@ -6,8 +6,7 @@ import { WalletContext } from '../contexts';
 import formatAddress from '../../helpers';
 
 export default function Header() {
-  const { setShowConnectWallet, setShowDisconnectWallet, address } =
-    useContext(WalletContext);
+  const { setShowConnectWallet, setShowDisconnectWallet, address } = useContext(WalletContext);
 
   return (
     <div className={styles.header}>
@@ -24,20 +23,14 @@ export default function Header() {
       <div className={styles.halfContainer}>
         {!address && (
           <div className={styles.alignRight}>
-            <button
-              className={styles.button}
-              onClick={() => setShowConnectWallet(true)}
-            >
+            <button className={styles.button} onClick={() => setShowConnectWallet(true)}>
               Connect Wallet
             </button>
           </div>
         )}
         {address && (
           <div className={styles.alignRight}>
-            <button
-              className={styles.button}
-              onClick={() => setShowDisconnectWallet(true)}
-            >
+            <button className={styles.button} onClick={() => setShowDisconnectWallet(true)}>
               {formatAddress(address)}
             </button>
           </div>

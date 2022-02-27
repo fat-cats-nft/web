@@ -25,10 +25,7 @@ export default function App() {
   useEffect(() => {
     if (window.ethereum) {
       setEventListeners();
-      const _provider = new ethers.providers.Web3Provider(
-        window.ethereum,
-        'any',
-      );
+      const _provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
       setContext(_provider);
     } else {
       setProvider(defaultProvider);
@@ -41,20 +38,14 @@ export default function App() {
       // Subscribe to accounts change
       window.ethereum.on('accountsChanged', (accounts) => {
         console.log('Accounts Changed: ', accounts);
-        const _provider = new ethers.providers.Web3Provider(
-          window.ethereum,
-          'any',
-        );
+        const _provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
         setContext(_provider);
       });
 
       // Subscribe to chainId change
       window.ethereum.on('chainChanged', (_chainId) => {
         console.log('Chain changed: ', _chainId);
-        const _provider = new ethers.providers.Web3Provider(
-          window.ethereum,
-          'any',
-        );
+        const _provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
         setContext(_provider);
       });
 

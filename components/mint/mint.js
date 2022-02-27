@@ -17,9 +17,7 @@ export default function Mint() {
   const { setShowConnectWallet, provider, chainId, signer, address, balance } =
     useContext(WalletContext);
   const [abi, setAbi] = useState(contracts.abi);
-  const [contractAddress, setContractAddress] = useState(
-    contracts.chains[chainId],
-  );
+  const [contractAddress, setContractAddress] = useState(contracts.chains[chainId]);
   const [minted, setMinted] = useState(0);
   const [available, setAvailable] = useState(0);
   const [disableMint, setDisableMint] = useState(false);
@@ -56,9 +54,7 @@ export default function Mint() {
         setErrorMessage('Incompatible chain. Switch to Rinkeby.');
       } else {
         if (balance && mintQuantity) {
-          const bigNumberAmountETH = ethers.utils.parseEther(
-            (mintQuantity * 0.1).toString(),
-          );
+          const bigNumberAmountETH = ethers.utils.parseEther((mintQuantity * 0.1).toString());
           if (balance.gte(bigNumberAmountETH)) {
             setDisableMint(false);
             setErrorMessage('');
@@ -119,10 +115,7 @@ export default function Mint() {
         <div className={commonStyles.buttonContainer}>
           <div>
             {!address && (
-              <button
-                className={commonStyles.button1}
-                onClick={() => setShowConnectWallet(true)}
-              >
+              <button className={commonStyles.button1} onClick={() => setShowConnectWallet(true)}>
                 Connect Wallet
               </button>
             )}
@@ -143,11 +136,7 @@ export default function Mint() {
                 >
                   +
                 </button>
-                <button
-                  className={commonStyles.button2}
-                  onClick={mint}
-                  disabled={disableMint}
-                >
+                <button className={commonStyles.button2} onClick={mint} disabled={disableMint}>
                   Mint
                 </button>
                 <div>{errorMessage}</div>

@@ -16,10 +16,7 @@ export default function Landing() {
       <div className={commonStyles.container}>
         <div className={commonStyles.buttonContainer}>
           {!address && (
-            <button
-              className={commonStyles.button1}
-              onClick={() => setShowConnectWallet(true)}
-            >
+            <button className={commonStyles.button1} onClick={() => setShowConnectWallet(true)}>
               Connect Wallet
             </button>
           )}
