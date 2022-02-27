@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
-import styles from './header.module.css';
 import { useContext } from 'react';
+
+import styles from './header.module.css';
 import { WalletContext } from '../contexts';
 import formatAddress from '../../helpers';
 

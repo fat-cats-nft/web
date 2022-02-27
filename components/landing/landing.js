@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+
 import commonStyles from '../common.module.css';
 import landingStyles from './landing.module.css';
-import { useContext } from 'react';
 import { WalletContext } from '../contexts';
 
 export default function Landing() {

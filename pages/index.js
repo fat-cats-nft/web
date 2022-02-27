@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ethers } from 'ethers';
+import Web3Modal from 'web3modal';
+
 import Header from '../components/header/header';
 import DisconnectWallet from '../components/wallet/wallet';
 import Landing from '../components/landing/landing';
 import Mint from '../components/mint/mint';
-import { ethers } from 'ethers';
-import Web3Modal from 'web3modal';
 import { defaultProvider, providerOptions } from '../providers';
 import { WalletContext } from '../components/contexts';
 

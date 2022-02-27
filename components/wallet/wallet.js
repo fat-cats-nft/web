@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+
 import { WalletContext } from '../contexts';
 import commonStyles from '../common.module.css';
 import walletStyles from './wallet.module.css';
