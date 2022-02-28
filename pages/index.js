@@ -1,16 +1,17 @@
-import { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Header from "../components/header/header";
-import DisconnectWallet from "../components/wallet/wallet";
-import Landing from "../components/landing/landing";
-import Mint from "../components/mint/mint";
-import { ethers } from "ethers";
-import Web3Modal from "web3modal";
-import { defaultProvider, providerOptions } from "../providers";
-import { WalletContext } from "../components/contexts";
+import { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ethers } from 'ethers';
+import Web3Modal from 'web3modal';
+
+import Header from '../components/header/header';
+import DisconnectWallet from '../components/wallet/wallet';
+import Landing from '../components/landing/landing';
+import Mint from '../components/mint/mint';
+import { defaultProvider, providerOptions } from '../providers';
+import { WalletContext } from '../components/contexts';
 
 export default function App() {
-  // Connecting wallet provider 
+  // Connecting wallet provider
   const [showConnectWallet, setShowConnectWallet] = useState(false);
   const [showDisconnectWallet, setShowDisconnectWallet] = useState(false);
   const [disconnectWallet, setDisconnectWallet] = useState(false);
@@ -24,38 +25,38 @@ export default function App() {
   useEffect(() => {
     if (window.ethereum) {
       setEventListeners();
-      const _provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+      const _provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
       setContext(_provider);
     } else {
       setProvider(defaultProvider);
     }
-  }, [])
+  }, []);
 
   // Set event listeners for provider
   function setEventListeners() {
     if (window.ethereum) {
       // Subscribe to accounts change
-      window.ethereum.on("accountsChanged", (accounts) => {
-        console.log("Accounts Changed: ", accounts);
-        const _provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+      window.ethereum.on('accountsChanged', (accounts) => {
+        console.log('Accounts Changed: ', accounts);
+        const _provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
         setContext(_provider);
       });
 
       // Subscribe to chainId change
-      window.ethereum.on("chainChanged", (_chainId) => {
-        console.log("Chain changed: ", _chainId);
-        const _provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+      window.ethereum.on('chainChanged', (_chainId) => {
+        console.log('Chain changed: ', _chainId);
+        const _provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
         setContext(_provider);
       });
 
       // Subscribe to provider connection
-      window.ethereum.on("connect", (info) => {
-        console.log("Connect: ", info);
+      window.ethereum.on('connect', (info) => {
+        console.log('Connect: ', info);
       });
 
       // Subscribe to provider disconnection
-      window.ethereum.on("disconnect", (info) => {
-        console.log("Disconnect: ", info);
+      window.ethereum.on('disconnect', (info) => {
+        console.log('Disconnect: ', info);
       });
     }
   }
@@ -66,8 +67,8 @@ export default function App() {
     if (window.ethereum) {
       const _chainId = await ethereum.request({ method: 'eth_chainId' });
       setChainId(_chainId);
-      const _accounts = await ethereum.request({ method: 'eth_accounts' })
-      console.log("Accounts: ", _accounts);
+      const _accounts = await ethereum.request({ method: 'eth_accounts' });
+      console.log('Accounts: ', _accounts);
       if (_accounts.length > 0) {
         const _signer = _provider.getSigner();
         setSigner(_signer);
@@ -83,7 +84,6 @@ export default function App() {
     }
   }
 
-
   useEffect(() => {
     if (showConnectWallet) {
       const walletConnect = async () => {
@@ -92,14 +92,13 @@ export default function App() {
           cachedProvider: true,
         });
         const _connection = await web3Modal.connect();
-        const _provider = new ethers.providers.Web3Provider(_connection, "any");
+        const _provider = new ethers.providers.Web3Provider(_connection, 'any');
         setProvider(_provider);
-      }
-      walletConnect()
-        .catch(console.error)
+      };
+      walletConnect().catch(console.error);
       setShowConnectWallet(false);
     }
-  }, [showConnectWallet])
+  }, [showConnectWallet]);
 
   useEffect(async () => {
     if (disconnectWallet) {
@@ -112,18 +111,29 @@ export default function App() {
         setProvider(defaultProvider);
         setShowDisconnectWallet(false);
         setDisconnectWallet(false);
-      }
-      deprovisionProvider()
-        .catch(console.error);
+      };
+      deprovisionProvider().catch(console.error);
     }
-  }, [disconnectWallet])
+  }, [disconnectWallet]);
 
   return (
-    <WalletContext.Provider value={{ setShowConnectWallet, setShowDisconnectWallet, provider, chainId, signer, address, balance }}>
-
+    <WalletContext.Provider
+      value={{
+        setShowConnectWallet,
+        setShowDisconnectWallet,
+        provider,
+        chainId,
+        signer,
+        address,
+        balance,
+      }}
+    >
       <Router>
         <Header />
-        <DisconnectWallet showDisconnectWallet={showDisconnectWallet} setDisconnectWallet={setDisconnectWallet} />
+        <DisconnectWallet
+          showDisconnectWallet={showDisconnectWallet}
+          setDisconnectWallet={setDisconnectWallet}
+        />
         <Routes>
           <Route path="/" element={<Landing />}></Route>
           <Route path="/mint" element={<Mint />}></Route>
