@@ -24,7 +24,7 @@ export default function App() {
   // Load provider on page load
   useEffect(() => {
     if (window.ethereum) {
-      setEventListeners();
+      setEventListeners(window.ethereum);
       const _provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
       setContext(_provider);
     } else {
@@ -33,41 +33,39 @@ export default function App() {
   }, []);
 
   // Set event listeners for provider
-  function setEventListeners() {
-    if (window.ethereum) {
-      // Subscribe to accounts change
-      window.ethereum.on('accountsChanged', (accounts) => {
-        console.log('Accounts Changed: ', accounts);
-        const _provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
-        setContext(_provider);
-      });
+  function setEventListeners(ethereum) {
+    // Subscribe to accounts change
+    ethereum.on('accountsChanged', (accounts) => {
+      console.log('Accounts Changed: ', accounts);
+      const _provider = new ethers.providers.Web3Provider(ethereum, 'any');
+      setContext(_provider);
+    });
 
-      // Subscribe to chainId change
-      window.ethereum.on('chainChanged', (_chainId) => {
-        console.log('Chain changed: ', _chainId);
-        const _provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
-        setContext(_provider);
-      });
+    // Subscribe to chainId change
+    ethereum.on('chainChanged', (_chainId) => {
+      console.log('Chain changed: ', _chainId);
+      const _provider = new ethers.providers.Web3Provider(ethereum, 'any');
+      setContext(_provider);
+    });
 
-      // Subscribe to provider connection
-      window.ethereum.on('connect', (info) => {
-        console.log('Connect: ', info);
-      });
+    // Subscribe to provider connection
+    ethereum.on('connect', (info) => {
+      console.log('Connect: ', info);
+    });
 
-      // Subscribe to provider disconnection
-      window.ethereum.on('disconnect', (info) => {
-        console.log('Disconnect: ', info);
-      });
-    }
+    // Subscribe to provider disconnection
+    ethereum.on('disconnect', (info) => {
+      console.log('Disconnect: ', info);
+    });
   }
 
   // Set context values
   async function setContext(_provider) {
     setProvider(_provider);
     if (window.ethereum) {
-      const _chainId = await ethereum.request({ method: 'eth_chainId' });
+      const _chainId = await window.ethereum.request({ method: 'eth_chainId' });
       setChainId(_chainId);
-      const _accounts = await ethereum.request({ method: 'eth_accounts' });
+      const _accounts = await window.ethereum.request({ method: 'eth_accounts' });
       console.log('Accounts: ', _accounts);
       if (_accounts.length > 0) {
         const _signer = _provider.getSigner();
