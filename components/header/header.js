@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { useContext } from 'react';
 
 import styles from './header.module.css';
@@ -13,10 +13,10 @@ export default function Header() {
       <div className={styles.halfContainer}>
         <div className={styles.alignLeft}>
           <button className={styles.button}>
-            <Link to="/">Home</Link>
+            <Link href="/">Home</Link>
           </button>
           <button className={styles.button}>
-            <Link to="/mint">Mint</Link>
+            <Link href="/mint">Mint</Link>
           </button>
         </div>
       </div>

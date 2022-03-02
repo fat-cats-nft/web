@@ -47,21 +47,19 @@ export default function Mint() {
 
   // Error handling
   function handleErrors() {
-    if (chainId) {
-      // Adjust mint ability
-      if (!contracts.chains[chainId]) {
-        setDisableMint(true);
-        setErrorMessage('Incompatible chain. Switch to Rinkeby.');
-      } else {
-        if (balance && mintQuantity) {
-          const bigNumberAmountETH = ethers.utils.parseEther((mintQuantity * 0.1).toString());
-          if (balance.gte(bigNumberAmountETH)) {
-            setDisableMint(false);
-            setErrorMessage('');
-          } else {
-            setDisableMint(true);
-            setErrorMessage('Insufficient ETH in wallet.');
-          }
+    // Adjust mint ability
+    if (!contracts.chains[chainId]) {
+      setDisableMint(true);
+      setErrorMessage('Incompatible chain. Switch to Rinkeby.');
+    } else {
+      if (balance && mintQuantity) {
+        const bigNumberAmountETH = ethers.utils.parseEther((mintQuantity * 0.1).toString());
+        if (balance.gte(bigNumberAmountETH)) {
+          setDisableMint(false);
+          setErrorMessage('');
+        } else {
+          setDisableMint(true);
+          setErrorMessage('Insufficient ETH in wallet.');
         }
       }
     }
