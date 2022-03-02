@@ -59,7 +59,6 @@ function App({ Component, pageProps }) {
 
   // Set context values
   async function setContext(_provider) {
-    console.log(_provider, '_provider?');
     setProvider(_provider);
     if (window.ethereum) {
       const _chainId = await window.ethereum.request({ method: 'eth_chainId' });
