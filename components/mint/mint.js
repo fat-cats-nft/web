@@ -23,6 +23,7 @@ export default function Mint() {
   const [disableMint, setDisableMint] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [mintQuantity, setMintQuantity] = useState(1);
+  const [mintPrice, setMintPrice] = useState();
 
   // Get Mint status on page load
   useEffect(() => {
@@ -31,15 +32,18 @@ export default function Mint() {
       const getMintStatus = async () => {
         const _minted = await contract.totalSupply();
         const _available = await contract.MAX_SUPPLY();
+        const _mintPrice = await contract.PRICE();
         return {
           minted: _minted.toNumber(),
           available: _available.toNumber(),
+          mintPrice: _mintPrice,
         };
       };
       getMintStatus()
         .then((result) => {
           setMinted(result.minted);
           setAvailable(result.available);
+          setMintPrice(result.mintPrice);
         })
         .catch(console.error);
     }
@@ -52,8 +56,8 @@ export default function Mint() {
       setDisableMint(true);
       setErrorMessage('Incompatible chain. Switch to Rinkeby.');
     } else {
-      if (balance && mintQuantity) {
-        const bigNumberAmountETH = ethers.utils.parseEther((mintQuantity * 0.1).toString());
+      if (balance && mintQuantity && mintPrice) {
+        const bigNumberAmountETH = mintPrice.mul(mintQuantity);
         if (balance.gte(bigNumberAmountETH)) {
           setDisableMint(false);
           setErrorMessage('');
@@ -85,9 +89,11 @@ export default function Mint() {
     if (address) {
       const contract = new ethers.Contract(contractAddress, abi, signer);
       try {
-        const amountETH = 0.1 * mintQuantity;
+        const mintAmountETH = mintPrice.mul(mintQuantity);
+        console.log(mintAmountETH);
+        console.log(mintQuantity);
         const response = await contract.mintNFTs(mintQuantity, {
-          value: ethers.utils.parseEther(amountETH.toString()),
+          value: mintAmountETH,
         });
         console.log('response: ', response);
       } catch (err) {
