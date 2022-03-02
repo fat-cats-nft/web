@@ -68,7 +68,6 @@ function App({ Component, pageProps }) {
       console.log('Accounts: ', _accounts);
       if (_accounts.length > 0) {
         const _signer = _provider.getSigner();
-        console.log(_signer, '_signer?');
         setSigner(_signer);
         const _address = await _signer.getAddress();
         setAddress(_address);
