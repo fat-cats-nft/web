@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { useContext } from 'react';
 
 import commonStyles from '../common.module.css';
@@ -22,7 +22,7 @@ export default function Landing() {
           )}
           {address && (
             <button className={commonStyles.button1}>
-              <Link to="/mint">Mint</Link>
+              <Link href="/mint">Mint</Link>
             </button>
           )}
         </div>
