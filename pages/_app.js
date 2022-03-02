@@ -89,7 +89,7 @@ function App({ Component, pageProps }) {
         });
         const _connection = await web3Modal.connect();
         const _provider = new ethers.providers.Web3Provider(_connection, 'any');
-        setProvider(_provider);
+        setContext(_provider);
       };
       walletConnect().catch(console.error);
       setShowConnectWallet(false);
@@ -98,6 +98,7 @@ function App({ Component, pageProps }) {
 
   useEffect(async () => {
     if (disconnectWallet) {
+      console.log("DISCONNECT");
       const deprovisionProvider = async () => {
         const web3Modal = new Web3Modal({
           providerOptions,
@@ -105,6 +106,9 @@ function App({ Component, pageProps }) {
         });
         await web3Modal.clearCachedProvider();
         setProvider(defaultProvider);
+        setSigner(null);
+        setAddress(null);
+        setBalance(null);
         setShowDisconnectWallet(false);
         setDisconnectWallet(false);
       };
