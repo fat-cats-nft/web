@@ -31,15 +31,9 @@ export default function Header() {
             <Link href="/mint">Mint</Link>
           </div>
         </Flex>
-        {!address && (
-          <div className={styles.button} onClick={() => setShowConnectWallet(true)}>
-            Connect Wallet
-          </div>
-        )}
+        {!address && <div onClick={() => setShowConnectWallet(true)}>Connect Wallet</div>}
         {address && (
-          <div className={styles.button} onClick={() => setShowDisconnectWallet(true)}>
-            {formatAddress(address)}
-          </div>
+          <div onClick={() => setShowDisconnectWallet(true)}>{formatAddress(address)}</div>
         )}
       </Flex>
     </header>

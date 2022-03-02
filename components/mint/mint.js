@@ -113,7 +113,7 @@ export default function Mint() {
         <div className={commonStyles.buttonContainer}>
           <div>
             {!address && (
-              <button className={commonStyles.button1} onClick={() => setShowConnectWallet(true)}>
+              <button className={commonStyles.walletBtn} onClick={() => setShowConnectWallet(true)}>
                 Connect Wallet
               </button>
             )}
@@ -121,20 +121,10 @@ export default function Mint() {
           <div>
             {address && (
               <div>
-                <button
-                  className={commonStyles.button}
-                  onClick={() => setMintQuantity(mintQuantity - 1)}
-                >
-                  -
-                </button>
+                <button onClick={() => setMintQuantity(mintQuantity - 1)}>-</button>
                 {mintQuantity}
-                <button
-                  className={commonStyles.button}
-                  onClick={() => setMintQuantity(mintQuantity + 1)}
-                >
-                  +
-                </button>
-                <button className={commonStyles.button2} onClick={mint} disabled={disableMint}>
+                <button onClick={() => setMintQuantity(mintQuantity + 1)}>+</button>
+                <button className={commonStyles.walletBtn} onClick={mint} disabled={disableMint}>
                   Mint
                 </button>
                 <div>{errorMessage}</div>

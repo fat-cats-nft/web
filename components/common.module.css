@@ -29,12 +29,10 @@
 .buttonContainer {
   display: flex;
   justify-content: center;
-  text-align: center;
   align-items: center;
-  margin-bottom: 25px;
 }
 
-.button1 {
+.walletBtn {
   margin: auto 15px;
   display: flex;
   align-items: center;
@@ -48,29 +46,11 @@
   height: 30px;
 }
 
-.button1:hover {
+.walletBtn:hover {
   cursor: pointer;
 }
 
-.button2 {
-  margin: auto 15px;
-  display: flex;
-  align-items: center;
-  background-color: #48bf91;
-  color: white;
-  font-size: 14px;
-  border: 1px solid white;
-  border-radius: 10px;
-  padding: 10px 10px;
-  text-align: center;
-  height: 30px;
-}
-
-.button2:hover {
-  cursor: pointer;
-}
-
-.button2:disabled {
+.walletBtn:disabled {
   cursor: auto;
   opacity: 0.5;
 }

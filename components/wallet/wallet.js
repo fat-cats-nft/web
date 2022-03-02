@@ -14,12 +14,12 @@ export default function DisconnectWallet({ showDisconnectWallet, setDisconnectWa
         <div className={walletStyles.container}>Address:</div>
         <div className={walletStyles.container}>{address}</div>
         <div className={walletStyles.container}>
-          <button className={commonStyles.button2} onClick={() => setShowDisconnectWallet(false)}>
+          <button className={commonStyles.walletBtn} onClick={() => setShowDisconnectWallet(false)}>
             Close
           </button>
         </div>
         <div className={walletStyles.container}>
-          <button className={commonStyles.button1} onClick={() => setDisconnectWallet(true)}>
+          <button className={commonStyles.walletBtn} onClick={() => setDisconnectWallet(true)}>
             Disconnect
           </button>
         </div>
