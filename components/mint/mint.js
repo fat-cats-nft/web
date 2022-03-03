@@ -25,34 +25,42 @@ export default function Mint() {
 
   // Get Mint status on page load
   useEffect(() => {
-    const contractAddress = contracts.chains[chainId];
-    if (provider && contractAddress && chainId) {
-      const contract = new ethers.Contract(contractAddress, contracts.abi, provider);
-      const getMintStatus = async () => {
-        const _minted = await contract.totalSupply();
-        const _available = await contract.MAX_SUPPLY();
-        const _mintPrice = await contract.PRICE();
-        return {
-          minted: _minted.toNumber(),
-          available: _available.toNumber(),
-          mintPrice: _mintPrice,
-        };
-      };
-      getMintStatus()
-        .then((result) => {
-          setMinted(result.minted);
-          setAvailable(result.available);
-          setMintPrice(result.mintPrice);
-          setDisableMint(false);
-          setErrorMessage('');
-        })
-        .catch(console.error);
-    } else {
-      setMinted(0);
-      setAvailable(0);
-      setMintPrice(ethers.BigNumber.from(0));
-    }
+    setMintData();
   }, [provider, chainId]);
+
+  const setMintData = async () => {
+    try {
+      const contractAddress = contracts.chains[chainId];
+      if (provider && contractAddress && chainId) {
+        const contract = new ethers.Contract(contractAddress, contracts.abi, provider);
+        const getMintStatus = async () => {
+          const _minted = await contract.totalSupply();
+          const _available = await contract.MAX_SUPPLY();
+          const _mintPrice = await contract.PRICE();
+          return {
+            minted: _minted.toNumber(),
+            available: _available.toNumber(),
+            mintPrice: _mintPrice,
+          };
+        };
+        getMintStatus()
+          .then((result) => {
+            setMinted(result.minted);
+            setAvailable(result.available);
+            setMintPrice(result.mintPrice);
+            setDisableMint(false);
+            setErrorMessage('');
+          })
+          .catch(console.error);
+      } else {
+        setMinted(0);
+        setAvailable(0);
+        setMintPrice(ethers.BigNumber.from(0));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   // Handle mint errors
   useEffect(() => {
