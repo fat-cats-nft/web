@@ -45,7 +45,11 @@ function App({ Component, pageProps }) {
     // Subscribe to chainId change
     ethereum.on('chainChanged', (_chainId) => {
       console.log('Chain changed: ', _chainId);
-      setChainId(_chainId);
+      if (typeof _chainId == 'number') {
+        setChainId("0x" + _chainId.toString());
+      } else {
+        setChainId(_chainId);
+      }
     });
 
     // Subscribe to provider connection

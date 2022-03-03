@@ -28,6 +28,7 @@ export default function Mint() {
     setMintData();
   }, [provider, chainId]);
 
+  // Set Mint Data
   const setMintData = async () => {
     try {
       const contractAddress = contracts.chains[chainId];
@@ -96,8 +97,6 @@ export default function Mint() {
       const contract = new ethers.Contract(contractAddress, contracts.abi, signer);
       try {
         const mintAmountETH = mintPrice.mul(mintQuantity);
-        console.log(mintAmountETH);
-        console.log(mintQuantity);
         const response = await contract.mintNFTs(mintQuantity, {
           value: mintAmountETH,
         });
