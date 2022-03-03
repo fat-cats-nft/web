@@ -135,7 +135,7 @@ export default function Mint() {
           </div>
           {address && (
             <Flex flexDirection="column">
-              <Flex justifyContent="space-around" marginBottom="1rem" alignItem="center">
+              <Flex justifyContent="space-around" marginBottom="1rem">
                 <button
                   className={mintStyles.mintBtn}
                   onClick={() => {
