@@ -35,15 +35,17 @@ function App({ Component, pageProps }) {
     // Subscribe to accounts change
     ethereum.on('accountsChanged', (accounts) => {
       console.log('Accounts Changed: ', accounts);
-      const _provider = new ethers.providers.Web3Provider(ethereum, 'any');
-      setContext(_provider);
+      if (accounts.length > 0) {
+        setAddress(accounts[0]);
+      } else {
+        setAddress(null);
+      }
     });
 
     // Subscribe to chainId change
     ethereum.on('chainChanged', (_chainId) => {
       console.log('Chain changed: ', _chainId);
-      const _provider = new ethers.providers.Web3Provider(ethereum, 'any');
-      setContext(_provider);
+      setChainId(chainId);
     });
 
     // Subscribe to provider connection
@@ -60,23 +62,25 @@ function App({ Component, pageProps }) {
   // Set context values
   async function setContext(_provider) {
     setProvider(_provider);
-    if (window.ethereum) {
-      const _chainId = await window.ethereum.request({ method: 'eth_chainId' });
+    try {
+      const _signer = _provider.getSigner();
+      setSigner(_signer);
+
+      const _network = await _provider.getNetwork();
+      const _chainId = "0x" + _network.chainId.toString()
       setChainId(_chainId);
-      const _accounts = await window.ethereum.request({ method: 'eth_accounts' });
-      console.log('Accounts: ', _accounts);
-      if (_accounts.length > 0) {
-        const _signer = _provider.getSigner();
-        setSigner(_signer);
-        const _address = await _signer.getAddress();
-        setAddress(_address);
-        const _balance = await _signer.getBalance();
-        setBalance(_balance);
-      } else {
-        setSigner(null);
-        setAddress(null);
-        setBalance(null);
-      }
+
+      const _address = await _signer.getAddress();
+      setAddress(_address);
+
+      const _balance = await _signer.getBalance();
+      setBalance(_balance);
+    } catch (error) {
+      console.error(error);
+      setSigner(null);
+      setAddress(null);
+      setBalance(null);
+      setChainId(null);
     }
   }
 
