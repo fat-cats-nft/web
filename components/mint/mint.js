@@ -1,3 +1,4 @@
+import { Flex } from '@chakra-ui/react';
 import { useState, useContext, useEffect } from 'react';
 import { ethers } from 'ethers';
 
@@ -118,19 +119,32 @@ export default function Mint() {
               </button>
             )}
           </div>
-          <div>
-            {address && (
-              <div>
-                <button onClick={() => setMintQuantity(mintQuantity - 1)}>-</button>
-                {mintQuantity}
-                <button onClick={() => setMintQuantity(mintQuantity + 1)}>+</button>
-                <button className={commonStyles.walletBtn} onClick={mint} disabled={disableMint}>
-                  Mint
+          {address && (
+            <Flex flexDirection="column">
+              <Flex justifyContent="space-around" marginBottom="1rem" alignItem="center">
+                <button
+                  className={mintStyles.mintBtn}
+                  onClick={() => {
+                    if (mintQuantity <= 0) return;
+                    setMintQuantity(mintQuantity - 1);
+                  }}
+                >
+                  -
                 </button>
-                <div>{errorMessage}</div>
-              </div>
-            )}
-          </div>
+                <div style={{ margin: 'auto 10px', fontWeight: 600 }}>{mintQuantity}</div>
+                <button
+                  className={mintStyles.mintBtn}
+                  onClick={() => setMintQuantity(mintQuantity + 1)}
+                >
+                  +
+                </button>
+              </Flex>
+              <button className={commonStyles.walletBtn} onClick={mint} disabled={disableMint}>
+                Mint
+              </button>
+            </Flex>
+          )}
+          <div>{errorMessage}</div>
         </div>
       </div>
     </div>

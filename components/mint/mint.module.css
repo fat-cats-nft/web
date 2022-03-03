@@ -1,8 +1,19 @@
 .bodyContainer {
-  font: 100;
   font-size: 18px;
   font-family: American Typewriter, serif;
   text-align: center;
   margin-top: 20px;
   margin-bottom: 20px;
+}
+
+.mintBtn {
+  border: 1px solid #48bf91;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+}
+
+.mintBtn:hover {
+  opacity: 0.75;
+  background: #48bf91;
 }
