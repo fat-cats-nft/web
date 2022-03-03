@@ -45,7 +45,7 @@ function App({ Component, pageProps }) {
     // Subscribe to chainId change
     ethereum.on('chainChanged', (_chainId) => {
       console.log('Chain changed: ', _chainId);
-      setChainId(chainId);
+      setChainId(_chainId);
     });
 
     // Subscribe to provider connection

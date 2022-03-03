@@ -16,7 +16,6 @@ const contracts = {
 export default function Mint() {
   const { setShowConnectWallet, provider, chainId, signer, address, balance } =
     useContext(WalletContext);
-  const [contractAddress, setContractAddress] = useState(contracts.chains[chainId]);
   const [minted, setMinted] = useState(0);
   const [available, setAvailable] = useState(0);
   const [disableMint, setDisableMint] = useState(false);
@@ -26,7 +25,8 @@ export default function Mint() {
 
   // Get Mint status on page load
   useEffect(() => {
-    if (provider && contractAddress && !minted) {
+    const contractAddress = contracts.chains[chainId];
+    if (provider && contractAddress && chainId) {
       const contract = new ethers.Contract(contractAddress, contracts.abi, provider);
       const getMintStatus = async () => {
         const _minted = await contract.totalSupply();
@@ -43,10 +43,23 @@ export default function Mint() {
           setMinted(result.minted);
           setAvailable(result.available);
           setMintPrice(result.mintPrice);
+          setDisableMint(false);
+          setErrorMessage('');
         })
         .catch(console.error);
+    } else {
+      setMinted(0);
+      setAvailable(0);
+      setMintPrice(ethers.BigNumber.from(0));
     }
-  }, [provider, contractAddress, minted]);
+  }, [provider, chainId]);
+
+  // Handle mint errors
+  useEffect(() => {
+    if (chainId && mintQuantity && balance) {
+      handleErrors();
+    }
+  }, [chainId, mintQuantity, balance]);
 
   // Error handling
   function handleErrors() {
@@ -68,24 +81,10 @@ export default function Mint() {
     }
   }
 
-  // Adjust state based on chainId
-  useEffect(() => {
-    // Adjust contract address
-    if (chainId) {
-      setContractAddress(contracts.chains[chainId]);
-    }
-  }, [chainId]);
-
-  // Handle mint errors
-  useEffect(() => {
-    if (chainId && mintQuantity && balance) {
-      handleErrors();
-    }
-  }, [chainId, mintQuantity, balance]);
-
   // Minting NFTs
   async function mint() {
     if (address) {
+      const contractAddress = contracts.chains[chainId];
       const contract = new ethers.Contract(contractAddress, contracts.abi, signer);
       try {
         const mintAmountETH = mintPrice.mul(mintQuantity);
