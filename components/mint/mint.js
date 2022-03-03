@@ -17,34 +17,59 @@ const contracts = {
 export default function Mint() {
   const { setShowConnectWallet, provider, chainId, signer, address, balance } =
     useContext(WalletContext);
-  const [abi, setAbi] = useState(contracts.abi);
-  const [contractAddress, setContractAddress] = useState(contracts.chains[chainId]);
   const [minted, setMinted] = useState(0);
   const [available, setAvailable] = useState(0);
   const [disableMint, setDisableMint] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [mintQuantity, setMintQuantity] = useState(1);
+  const [mintPrice, setMintPrice] = useState();
 
   // Get Mint status on page load
   useEffect(() => {
-    if (provider && abi && contractAddress && !minted) {
-      const contract = new ethers.Contract(contractAddress, abi, provider);
-      const getMintStatus = async () => {
-        const _minted = await contract.totalSupply();
-        const _available = await contract.MAX_SUPPLY();
-        return {
-          minted: _minted.toNumber(),
-          available: _available.toNumber(),
+    setMintData();
+  }, [provider, chainId]);
+
+  // Set Mint Data
+  const setMintData = async () => {
+    try {
+      const contractAddress = contracts.chains[chainId];
+      if (provider && contractAddress && chainId) {
+        const contract = new ethers.Contract(contractAddress, contracts.abi, provider);
+        const getMintStatus = async () => {
+          const _minted = await contract.totalSupply();
+          const _available = await contract.MAX_SUPPLY();
+          const _mintPrice = await contract.PRICE();
+          return {
+            minted: _minted.toNumber(),
+            available: _available.toNumber(),
+            mintPrice: _mintPrice,
+          };
         };
-      };
-      getMintStatus()
-        .then((result) => {
-          setMinted(result.minted);
-          setAvailable(result.available);
-        })
-        .catch(console.error);
+        getMintStatus()
+          .then((result) => {
+            setMinted(result.minted);
+            setAvailable(result.available);
+            setMintPrice(result.mintPrice);
+            setDisableMint(false);
+            setErrorMessage('');
+          })
+          .catch(console.error);
+      } else {
+        setMinted(0);
+        setAvailable(0);
+        setMintPrice(ethers.BigNumber.from(0));
+      }
+    } catch (error) {
+      console.error(error);
     }
-  }, [provider, abi, contractAddress, minted]);
+  };
+
+  // Handle mint errors
+  useEffect(() => {
+    if (chainId && mintQuantity && balance) {
+      handleErrors();
+    }
+  }, [chainId, mintQuantity, balance]);
 
   // Error handling
   function handleErrors() {
@@ -53,8 +78,8 @@ export default function Mint() {
       setDisableMint(true);
       setErrorMessage('Incompatible chain. Switch to Rinkeby.');
     } else {
-      if (balance && mintQuantity) {
-        const bigNumberAmountETH = ethers.utils.parseEther((mintQuantity * 0.1).toString());
+      if (balance && mintQuantity && mintPrice) {
+        const bigNumberAmountETH = mintPrice.mul(mintQuantity);
         if (balance.gte(bigNumberAmountETH)) {
           setDisableMint(false);
           setErrorMessage('');
@@ -66,35 +91,24 @@ export default function Mint() {
     }
   }
 
-  // Adjust state based on chainId
-  useEffect(() => {
-    // Adjust contract address
-    if (chainId) {
-      setContractAddress(contracts.chains[chainId]);
-    }
-  }, [chainId]);
-
-  // Handle mint errors
-  useEffect(() => {
-    if (chainId && mintQuantity && balance) {
-      handleErrors();
-    }
-  }, [chainId, mintQuantity, balance]);
-
   // Minting NFTs
   async function mint() {
     if (address) {
-      const contract = new ethers.Contract(contractAddress, abi, signer);
+      const contractAddress = contracts.chains[chainId];
+      const contract = new ethers.Contract(contractAddress, contracts.abi, signer);
       try {
-        const amountETH = 0.1 * mintQuantity;
+        const mintAmountETH = mintPrice.mul(mintQuantity);
         const response = await contract.mintNFTs(mintQuantity, {
-          value: ethers.utils.parseEther(amountETH.toString()),
+          value: mintAmountETH,
         });
         console.log('response: ', response);
       } catch (err) {
-        console.log('error: ', err);
-        setErrorMessage(err.error.message);
-        setDisableMint(true);
+        if (err.error) {
+          setErrorMessage(err.error.message);
+          setDisableMint(true);
+        } else {
+          console.error(err);
+        }
       }
     }
   }
