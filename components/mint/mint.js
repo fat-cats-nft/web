@@ -16,7 +16,6 @@ const contracts = {
 export default function Mint() {
   const { setShowConnectWallet, provider, chainId, signer, address, balance } =
     useContext(WalletContext);
-  const [abi, setAbi] = useState(contracts.abi);
   const [contractAddress, setContractAddress] = useState(contracts.chains[chainId]);
   const [minted, setMinted] = useState(0);
   const [available, setAvailable] = useState(0);
@@ -27,8 +26,8 @@ export default function Mint() {
 
   // Get Mint status on page load
   useEffect(() => {
-    if (provider && abi && contractAddress && !minted) {
-      const contract = new ethers.Contract(contractAddress, abi, provider);
+    if (provider && contractAddress && !minted) {
+      const contract = new ethers.Contract(contractAddress, contracts.abi, provider);
       const getMintStatus = async () => {
         const _minted = await contract.totalSupply();
         const _available = await contract.MAX_SUPPLY();
@@ -47,7 +46,7 @@ export default function Mint() {
         })
         .catch(console.error);
     }
-  }, [provider, abi, contractAddress, minted]);
+  }, [provider, contractAddress, minted]);
 
   // Error handling
   function handleErrors() {
@@ -87,7 +86,7 @@ export default function Mint() {
   // Minting NFTs
   async function mint() {
     if (address) {
-      const contract = new ethers.Contract(contractAddress, abi, signer);
+      const contract = new ethers.Contract(contractAddress, contracts.abi, signer);
       try {
         const mintAmountETH = mintPrice.mul(mintQuantity);
         console.log(mintAmountETH);
