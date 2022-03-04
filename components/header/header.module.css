@@ -1,13 +1,26 @@
 .header {
   background-color: #48bf91;
   width: 100%;
-  padding: 10px;
   margin-bottom: 10px;
   color: white;
 }
 
 .link {
   margin-right: 1rem;
+}
+
+.link:hover {
+  cursor: pointer;
+  border-bottom: 1px solid #9dd3be;
+}
+
+.walletModal {
+  cursor: pointer;
+  padding: 10px;
+}
+
+.walletModal:hover {
+  opacity: 0.75;
 }
 
 .link-active {

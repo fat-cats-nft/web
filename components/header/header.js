@@ -15,7 +15,7 @@ export default function Header() {
   return (
     <header className={styles.header}>
       <Flex justifyContent="space-between">
-        <Flex>
+        <Flex padding="10px">
           <div
             className={classnames(styles.link, {
               [styles['link-active']]: router.pathname === '/',
@@ -31,10 +31,13 @@ export default function Header() {
             <Link href="/mint">Mint</Link>
           </div>
         </Flex>
-        {!address && <div onClick={() => setShowConnectWallet(true)}>Connect Wallet</div>}
-        {address && (
-          <div onClick={() => setShowDisconnectWallet(true)}>{formatAddress(address)}</div>
-        )}
+        <div className={styles.walletModal}>
+          {!address ? (
+            <div onClick={() => setShowConnectWallet(true)}>Connect Wallet</div>
+          ) : (
+            <div onClick={() => setShowDisconnectWallet(true)}>{formatAddress(address)}</div>
+          )}
+        </div>
       </Flex>
     </header>
   );
