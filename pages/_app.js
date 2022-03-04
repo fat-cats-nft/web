@@ -1,3 +1,4 @@
+import { ChakraProvider } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import Web3Modal from 'web3modal';
@@ -125,24 +126,26 @@ function App({ Component, pageProps }) {
   }, [disconnectWallet]);
 
   return (
-    <WalletContext.Provider
-      value={{
-        setShowConnectWallet,
-        setShowDisconnectWallet,
-        provider,
-        chainId,
-        signer,
-        address,
-        balance,
-      }}
-    >
-      <Header />
-      <DisconnectWallet
-        showDisconnectWallet={showDisconnectWallet}
-        setDisconnectWallet={setDisconnectWallet}
-      />
-      <div>{typeof window === 'undefined' ? null : <Component {...pageProps} />}</div>;
-    </WalletContext.Provider>
+    <ChakraProvider>
+      <WalletContext.Provider
+        value={{
+          setShowConnectWallet,
+          setShowDisconnectWallet,
+          provider,
+          chainId,
+          signer,
+          address,
+          balance,
+        }}
+      >
+        <Header />
+        <DisconnectWallet
+          showDisconnectWallet={showDisconnectWallet}
+          setDisconnectWallet={setDisconnectWallet}
+        />
+        <div>{typeof window === 'undefined' ? null : <Component {...pageProps} />}</div>;
+      </WalletContext.Provider>
+    </ChakraProvider>
   );
 }
 

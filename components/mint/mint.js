@@ -1,3 +1,4 @@
+import { Flex } from '@chakra-ui/react';
 import { useState, useContext, useEffect } from 'react';
 import { ethers } from 'ethers';
 
@@ -127,34 +128,37 @@ export default function Mint() {
         <div className={commonStyles.buttonContainer}>
           <div>
             {!address && (
-              <button className={commonStyles.button1} onClick={() => setShowConnectWallet(true)}>
+              <button className={commonStyles.walletBtn} onClick={() => setShowConnectWallet(true)}>
                 Connect Wallet
               </button>
             )}
           </div>
-          <div>
-            {address && (
-              <div>
+          {address && (
+            <Flex flexDirection="column">
+              <Flex justifyContent="space-around" marginBottom="1rem">
                 <button
-                  className={commonStyles.button}
-                  onClick={() => setMintQuantity(mintQuantity - 1)}
+                  className={mintStyles.mintBtn}
+                  onClick={() => {
+                    if (mintQuantity <= 0) return;
+                    setMintQuantity(mintQuantity - 1);
+                  }}
                 >
                   -
                 </button>
-                {mintQuantity}
+                <div style={{ margin: 'auto 10px', fontWeight: 600 }}>{mintQuantity}</div>
                 <button
-                  className={commonStyles.button}
+                  className={mintStyles.mintBtn}
                   onClick={() => setMintQuantity(mintQuantity + 1)}
                 >
                   +
                 </button>
-                <button className={commonStyles.button2} onClick={mint} disabled={disableMint}>
-                  Mint
-                </button>
-                <div>{errorMessage}</div>
-              </div>
-            )}
-          </div>
+              </Flex>
+              <button className={commonStyles.walletBtn} onClick={mint} disabled={disableMint}>
+                Mint
+              </button>
+            </Flex>
+          )}
+          <div>{errorMessage}</div>
         </div>
       </div>
     </div>
