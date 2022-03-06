@@ -25,14 +25,14 @@ export default function DisconnectWallet({ showDisconnectWallet, setDisconnectWa
   };
 
   return (
-    <Modal isOpen={showDisconnectWallet} onClose={closeWallet}>
+    <Modal isOpen={showDisconnectWallet} onClose={closeWallet} size="md">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Address</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           {/* TODO: add clipboard icon?  */}
-          <div style={{ cursor: 'pointer' }} onClick={onCopy}>
+          <div style={{ cursor: 'pointer', fontSize: '15px' }} onClick={onCopy}>
             {address}
           </div>
           {hasCopied && (
