@@ -22,11 +22,11 @@ function App({ Component, pageProps }) {
 
   // Load provider on page load
   useEffect(() => {
-    if (window.ethereum) {
+    try {
       setEventListeners(window.ethereum);
       const _provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
       setContext(_provider);
-    } else {
+    } catch (err) {
       setProvider(defaultProvider);
     }
   }, []);
@@ -82,6 +82,7 @@ function App({ Component, pageProps }) {
       setBalance(_balance);
     } catch (error) {
       console.error(error);
+      setProvider(defaultProvider);
       setSigner(null);
       setAddress(null);
       setBalance(null);
